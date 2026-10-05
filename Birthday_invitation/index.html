@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>You're Invited! 🎉 Birthday Celebration</title>
+  
+  <!-- WhatsApp & Social Media Preview Cards (Open Graph) -->
+  <meta property="og:title" content="🎉 You're Invited to Celebrate a Birthday!">
+  <meta property="og:description" content="Tap to open your exclusive invitation card, view event details, venue location, and RSVP.">
+  <meta property="og:type" content="website">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background Animated Elements -->
+  <div class="bg-stars" id="bgStars"></div>
+  <div class="floating-balloons-container" id="balloonsContainer"></div>
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- Audio Toggle Button -->
+  <button id="musicToggleBtn" class="floating-music-btn" aria-label="Toggle Music" title="Play / Pause Celebration Music">
+    <svg id="musicIconPlay" class="music-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M9 18V5l12-2v13"></path>
+      <circle cx="6" cy="18" r="3"></circle>
+      <circle cx="18" cy="16" r="3"></circle>
+    </svg>
+    <span class="music-label">Music</span>
+  </button>
+
+  <!-- ============================================== -->
+  <!-- STEP 1: INTERACTIVE ENVELOPE (Tap to Open) -->
+  <!-- ============================================== -->
+  <div id="envelopeSection" class="envelope-section">
+    <div class="envelope-prompt">
+      <span class="sparkle-badge">✨ Special Delivery</span>
+      <h2>A Special Invitation For You</h2>
+      <p>Tap the wax seal to open your card</p>
+    </div>
+
+    <div class="envelope-wrapper" id="envelopeWrapper">
+      <div class="envelope">
+        <!-- Envelope Back Flap -->
+        <div class="envelope-flap-top" id="envelopeFlap"></div>
+        <div class="envelope-pocket"></div>
+        
+        <!-- Letter Peeking Inside -->
+        <div class="envelope-letter-preview">
+          <span class="peek-badge">🎉 YOU'RE INVITED</span>
+          <span class="peek-text">Tap the seal to reveal</span>
+        </div>
+
+        <!-- Wax Seal Button -->
+        <div class="wax-seal" id="waxSealBtn">
+          <div class="seal-inner">
+            <span class="seal-crown">👑</span>
+            <span class="seal-text">OPEN</span>
+          </div>
+          <div class="seal-pulse"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- STEP 2: MAIN INVITATION CARD (Revealed on Open) -->
+  <!-- ============================================== -->
+  <main id="invitationContent" class="invitation-container hidden">
+    
+    <!-- Top Celebration Banner -->
+    <header class="card-hero">
+      <div class="party-badge">🎈 CELEBRATING LIFE & JOY 🎈</div>
+      <h3 class="hero-subheading">Together with family & friends</h3>
+      <h1 class="celebrant-name" id="displayCelebrantName">Sarah Jenkins</h1>
+      <p class="celebrant-milestone" id="displayMilestone">is turning 25!</p>
+
+      <!-- LUXURY CELEBRANT PHOTO SHOWCASE -->
+      <div class="luxury-photo-section">
+        <div class="photo-card-wrapper" id="photoWrapper">
+          
+          <!-- Ambient Soft Halo Glow Behind Frame -->
+          <div class="photo-card-halo"></div>
+
+          <!-- Main Portrait Card Frame -->
+          <div class="portrait-card" id="portraitCard">
+            
+            <!-- Floating Frosted Glass Header Bar -->
+            <div class="photo-glass-header">
+              <div class="vip-pill">
+                <svg class="vip-crown-svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/>
+                </svg>
+                <span id="displayVipBadge">✨ Birthday Queen ✨</span>
+              </div>
+
+              <div class="header-tools">
+                <span class="photo-counter-badge" id="photoCounterBadge">1 / 3</span>
+                <button class="photo-tool-btn" id="btnZoomPhoto" type="button" aria-label="View photo in fullscreen" title="Tap to view fullscreen">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <polyline points="9 21 3 21 3 15"></polyline>
+                    <line x1="21" y1="3" x2="14" y2="10"></line>
+                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Photo Viewport Window -->
+            <div class="photo-viewport" id="photoViewport">
+              <!-- Silk Shimmer Sheen Sweep -->
+              <div class="silk-shimmer-sweep"></div>
+              
+              <!-- Portrait Image -->
+              <img id="displayPhoto" class="celebrant-portrait-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80" alt="Birthday Celebrant" draggable="false" />
+
+              <!-- Bottom Vignette Gradient for Contrast -->
+              <div class="photo-bottom-vignette"></div>
+
+              <!-- Double-Tap Heart Burst Element -->
+              <div class="double-tap-heart" id="doubleTapHeart">
+                <span>💖</span>
+              </div>
+
+              <!-- Floating Hearts Burst Layer -->
+              <div class="floating-hearts-layer" id="floatingHeartsLayer"></div>
+
+              <!-- Sleek Navigation Arrows -->
+              <button class="photo-nav-btn prev-btn" id="btnPrevPhoto" aria-label="Previous photo" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+              <button class="photo-nav-btn next-btn" id="btnNextPhoto" aria-label="Next photo" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Mini Thumbnails Row inside Card Frame -->
+            <div class="photo-card-footer" id="photoThumbnailsWrapper">
+              <div class="photo-thumbnails" id="photoThumbnails">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Interactive Reaction Bar Below Card -->
+          <div class="photo-reaction-bar">
+            <button class="love-reaction-btn" id="btnSendLove" type="button" title="Tap to send birthday love!">
+              <span class="love-heart-icon">💖</span>
+              <span class="love-btn-text">Send Love</span>
+              <span class="love-counter-badge" id="heartCounter">128</span>
+            </button>
+            <span class="photo-hint-text">✨ Double-tap photo to like</span>
+          </div>
+
+        </div>
+      </div>
+
+      <p class="invitation-quote">
+        "Join us for an evening of laughter, music, delicious bites, and unforgettable memories!"
+      </p>
+    </header>
+
+    <!-- COUNTDOWN TIMER -->
+    <section class="section-box countdown-box">
+      <div class="section-header">
+        <span class="icon">⏳</span>
+        <h3>Countdown to the Big Day</h3>
+      </div>
+      <div class="countdown-grid" id="countdownGrid">
+        <div class="countdown-item">
+          <span class="countdown-val" id="daysVal">00</span>
+          <span class="countdown-lbl">Days</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-val" id="hoursVal">00</span>
+          <span class="countdown-lbl">Hours</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-val" id="minutesVal">00</span>
+          <span class="countdown-lbl">Mins</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-val" id="secondsVal">00</span>
+          <span class="countdown-lbl">Secs</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- EVENT DETAILS: DATE & TIME -->
+    <section class="section-box details-box">
+      <div class="section-header">
+        <span class="icon">📅</span>
+        <h3>When & Where</h3>
+      </div>
+
+      <div class="details-cards">
+        <div class="detail-card">
+          <div class="detail-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </div>
+          <div class="detail-info">
+            <span class="detail-label">DATE & DAY</span>
+            <strong class="detail-main" id="displayDate">Saturday, October 24, 2026</strong>
+            <span class="detail-sub" id="displayTime">Starting at 6:30 PM onwards</span>
+          </div>
+        </div>
+
+        <div class="detail-card">
+          <div class="detail-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+          </div>
+          <div class="detail-info">
+            <span class="detail-label">PARTY VENUE</span>
+            <strong class="detail-main" id="displayVenueName">Skyline Rooftop Lounge & Gardens</strong>
+            <span class="detail-sub" id="displayAddress">45 Grand Avenue, Downtown Metro</span>
+          </div>
+        </div>
+
+        <div class="detail-card">
+          <div class="detail-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"></path>
+            </svg>
+          </div>
+          <div class="detail-info">
+            <span class="detail-label">DRESS CODE</span>
+            <strong class="detail-main" id="displayDressCode">Chic & Glamorous (Touch of Gold or Black)</strong>
+            <span class="detail-sub">Wear your favorite party outfit!</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Action: Open in Maps & Add to Calendar -->
+      <div class="quick-action-buttons">
+        <a id="btnMaps" href="#" target="_blank" class="action-btn map-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+            <line x1="8" y1="2" x2="8" y2="18"></line>
+            <line x1="16" y1="6" x2="16" y2="22"></line>
+          </svg>
+          <span>Get Directions</span>
+        </a>
+
+        <a id="btnCalendar" href="#" target="_blank" class="action-btn cal-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+            <line x1="12" y1="14" x2="12" y2="18"></line>
+            <line x1="10" y1="16" x2="14" y2="16"></line>
+          </svg>
+          <span>Save to Calendar</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ITINERARY / TIMELINE -->
+    <section class="section-box timeline-box">
+      <div class="section-header">
+        <span class="icon">✨</span>
+        <h3>Party Highlights</h3>
+      </div>
+      <div class="timeline">
+        <div class="timeline-step">
+          <div class="time-badge">6:30 PM</div>
+          <div class="step-card">
+            <h4>Welcome Drinks & Snacks</h4>
+            <p>Arrive, mingle, take polaroids & enjoy welcome mocktails/cocktails.</p>
+          </div>
+        </div>
+        <div class="timeline-step">
+          <div class="time-badge">7:30 PM</div>
+          <div class="step-card">
+            <h4>Fun Games & Photos</h4>
+            <p>Interactive group games, laughter, and photo booth moments.</p>
+          </div>
+        </div>
+        <div class="timeline-step highlight-step">
+          <div class="time-badge">8:30 PM</div>
+          <div class="step-card">
+            <h4>Grand Cake Cutting 🎂</h4>
+            <p>Singing Happy Birthday & toast to the birthday celebrant!</p>
+          </div>
+        </div>
+        <div class="timeline-step">
+          <div class="time-badge">9:00 PM</div>
+          <div class="step-card">
+            <h4>Feast & Dance Floor</h4>
+            <p>Buffet dinner, desserts, and the DJ spinning top dance tracks!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RSVP SECTION (WHATSAPP 1-TAP + IN-PAGE FORM) -->
+    <section class="section-box rsvp-box">
+      <div class="rsvp-badge">RSVP PLEASE</div>
+      <h3>Will You Be Joining The Fun?</h3>
+      <p>Kindly confirm your attendance by <strong id="displayRsvpDeadline">October 18</strong> so we can ensure ample food & drinks for everyone!</p>
+
+      <!-- 1-Tap RSVP on WhatsApp -->
+      <div class="rsvp-buttons">
+        <a id="btnRsvpWhatsApp" href="#" target="_blank" class="rsvp-cta-btn whatsapp-cta">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zM12.05 20.2c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.214 8.214 0 0 1-1.26-4.42c0-4.54 3.7-8.24 8.24-8.24 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c.02 4.54-3.68 8.27-8.22 8.27zm4.52-6.17c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.86.84-.86 2.05 0 1.21.88 2.38 1.01 2.55.12.17 1.74 2.66 4.21 3.73.59.25 1.05.4 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.07-.12-.23-.19-.47-.32z"/>
+          </svg>
+          <span>RSVP on WhatsApp (1-Tap)</span>
+        </a>
+      </div>
+
+      <!-- Quick Interactive RSVP Form in Page -->
+      <div class="rsvp-form-container">
+        <div class="divider"><span>OR RSVP RIGHT HERE</span></div>
+        <form id="rsvpForm" class="rsvp-form">
+          <div class="form-group">
+            <label for="guestName">Your Full Name</label>
+            <input type="text" id="guestName" placeholder="e.g. Alex Smith" required>
+          </div>
+
+          <div class="form-group">
+            <label>Will you be attending?</label>
+            <div class="radio-cards">
+              <label class="radio-card selected">
+                <input type="radio" name="attendance" value="Yes, Absolutely! 🎉" checked>
+                <span class="radio-icon">🥳</span>
+                <span class="radio-text">Yes, I'll be there!</span>
+              </label>
+              <label class="radio-card">
+                <input type="radio" name="attendance" value="Sorry, Can't Make It 😢">
+                <span class="radio-icon">🥺</span>
+                <span class="radio-text">Sorry, can't make it</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group" id="guestCountGroup">
+            <label for="guestCount">Number of Guests (including you)</label>
+            <select id="guestCount">
+              <option value="1">1 Person (Just Me)</option>
+              <option value="2">2 Persons (+1)</option>
+              <option value="3">3 Persons</option>
+              <option value="4+">4 or more</option>
+            </select>
+          </div>
+
+          <button type="submit" class="submit-rsvp-btn" id="btnSubmitRsvp">
+            <span>Send RSVP Confirmation ✨</span>
+          </button>
+        </form>
+
+        <div id="rsvpSuccessMessage" class="rsvp-success hidden">
+          <div class="success-icon">🎉</div>
+          <h4>Thank you for confirming!</h4>
+          <p id="rsvpSuccessDetails">We can't wait to celebrate together!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- BIRTHDAY WISH WALL -->
+    <section class="section-box wishes-box">
+      <div class="section-header">
+        <span class="icon">💌</span>
+        <h3>Leave a Birthday Wish</h3>
+      </div>
+      <p class="wishes-intro">Drop a warm wish or message for the birthday star!</p>
+
+      <form id="wishForm" class="wish-form">
+        <input type="text" id="wisherName" placeholder="Your name..." required>
+        <textarea id="wishMessage" rows="2" placeholder="Write your heartfelt wish or joke..." required></textarea>
+        <button type="submit" class="wish-btn">Send Wish 🎁</button>
+      </form>
+
+      <!-- Wishes Feed -->
+      <div class="wishes-list" id="wishesList">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- HOST CONTACT & FOOTER -->
+    <footer class="card-footer">
+      <div class="host-info">
+        <p>Hosted with love by</p>
+        <h4 id="displayHostName">The Family & Besties</h4>
+        <p class="host-contact">Questions? Call/WhatsApp: <a id="hostPhoneLink" href="tel:+1234567890">+1 (234) 567-890</a></p>
+      </div>
+
+      <div class="party-pop-btn-container">
+        <button id="popConfettiBtn" class="pop-confetti-btn">
+          <span>🎊 Tap for Celebration Confetti! 🎊</span>
+        </button>
+      </div>
+
+      <div class="share-tip">
+        <small>💡 Save this page or add to your home screen so you have directions handy on party day!</small>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- FULLSCREEN PHOTO LIGHTBOX MODAL -->
+  <div id="photoLightboxModal" class="photo-lightbox-modal hidden" role="dialog" aria-modal="true" aria-label="Photo Fullscreen View">
+    <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+    <div class="lightbox-content">
+      <button class="lightbox-close-btn" id="btnCloseLightbox" type="button" aria-label="Close fullscreen view">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <button class="lightbox-nav-btn lb-prev" id="btnLbPrev" type="button" aria-label="Previous photo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
+      <div class="lightbox-img-box">
+        <img id="lightboxImg" class="lightbox-img" src="" alt="Celebrant Full View" />
+      </div>
+
+      <button class="lightbox-nav-btn lb-next" id="btnLbNext" type="button" aria-label="Next photo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+
+      <div class="lightbox-footer">
+        <span class="lightbox-celebrant" id="lbCelebrantName">Sarah Jenkins</span>
+        <span class="lightbox-counter" id="lbCounter">1 / 3</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
